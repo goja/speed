@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html ng-app="speed">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Move fast</title>
+</head>
+<body>
+<table>
+<tr>
+<td>
+<table>
+<tr><td><a href="#/view">List</a></td></tr>
+<tr><td><a href="#/add">Add</a></td></tr>
+</table>
+</td>
+<td>
+<div ng-view></div>
+</td>
+</tr>
+</table>
+</body>
+<script type="text/javascript" src="js/angular.js"></script>
+<script type="text/javascript" src="js/angular-route.js"></script>
+<script type="text/javascript" src="js/angular-resource.js"></script>
+<script type="text/javascript">
+
+var services = angular.module('speed.services', ['ngResource']);
+
+services.factory('Book', ['$resource', 
+	function($resource){
+		return $resource('/books/:id', {id: '@id'}, {
+			update: {
+				method: 'PUT'
+			}	
+		});
+}]);
+
+
+var app = angular.module('speed', ['ngRoute', 'speed.services']);
+
+app.config(['$routeProvider', 
+    function ($routeProvider) {
+		$routeProvider.
+			when('/view', {
+				controller: 'ListController',
+				templateUrl: 'view.html',
+			}).
+			when('/add', {
+				controller: 'AddController',
+				templateUrl: 'add.html'
+			}).
+			when('/edit/:bookId', {
+				controller: 'EditController',
+				templateUrl: 'edit.html'
+			}).
+			otherwise({
+				redirectTo: '/view'
+			});
+	}
+]);
+
+app.controller('ListController', function ($scope, Book, $location){
+	$scope.books = Book.query();
+	$scope.delete = function(book, index){
+		book.$remove();
+		$scope.books.splice(index, 1);
+	};
+	$scope.edit = function(book){
+		$location.path('/edit/' + book.id);
+	};
+});
+
+app.controller('AddController', function ($scope, Book){
+	$scope.book = new Book();
+	$scope.add = function(){
+		$scope.book.$save();
+		$scope.book = new Book();
+	};
+});
+
+app.controller('EditController', function ($scope, Book, $route, $location){
+	$scope.book = Book.get({id: $route.current.params.bookId});
+	$scope.update = function(){
+		$scope.book.$update();
+		$location.path('/view');
+	};
+});
+
+</script>
+</html>

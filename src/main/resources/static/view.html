@@ -1,0 +1,11 @@
+<table>
+  <tr ng-repeat="book in books">
+    <td>{{book.id}}</td>
+    <td>{{book.title}}</td>
+    <td>{{book.author}}</td>
+    <td>{{book.price | currency}}</td>
+    <td><button ng-click="edit(book)">Edit</button></td>
+    <td><button ng-click="delete(book, $index)">Delete</button></td>
+  </tr>
+</table>
+

@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html ng-app="secure">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Secured app</title>
+</head>
+<body ng-controller="secureController">
+{{msg}}
+</body>
+<script type="text/javascript" src="js/angular.js"></script>
+<script type="text/javascript">
+var app = angular.module('secure', []);
+app.controller('secureController', function($scope, $http, $window){
+	$scope.msg = 'Not Authorized';
+	
+	$http({withCredentials: true}).get('https://raoul-cas/QuickLaunch/secured/1/api/list/applications').
+	  success(function(data, status, headers, config) {
+		  //if(headers('Content-Type') == 'text/html;charset=UTF-8'){
+			//  $window.location.href = 'https://raoul-cas/QuickLaunch/secured/1/api/auth?url=http://raoul-g/secure.html';
+		  //} else {
+			  $scope.msg = data;
+		  //}
+	  }).
+	  error(function(data, status, headers, config) {
+		  //alert('error ' + status);
+		  //$window.location.href = 'https://raoul-cas/QuickLaunch/secured/1/api/auth?url=http://raoul-g/secure.html';
+	  });
+});
+</script>
+</html>
