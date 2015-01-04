@@ -1,10 +1,10 @@
 package org.goja.speed.controller;
 
-import java.util.List;
-
 import org.goja.speed.model.Book;
 import org.goja.speed.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +18,9 @@ public class BookController {
 	@Autowired
 	private BookRepository bookRepository;
 
-	@RequestMapping(method = RequestMethod.GET)
-	List<Book> list() {
-		return (List<Book>) bookRepository.findAll();
+	@RequestMapping(value = "/{size}/{page}", method = RequestMethod.GET)
+	Page<Book> list(@PathVariable Integer size, @PathVariable Integer page) {
+		return (Page<Book>) bookRepository.findAll(new PageRequest(page, size));
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

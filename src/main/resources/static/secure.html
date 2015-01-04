@@ -13,13 +13,13 @@ var app = angular.module('secure', []);
 app.controller('secureController', function($scope, $http, $window){
 	$scope.msg = 'Not Authorized';
 	
-	$http({withCredentials: true}).get('https://raoul-cas/QuickLaunch/secured/1/api/list/applications').
+	$http.get('https://raoul-cas/QuickLaunch/secured/1/api/list/applications', {withCredentials: true}).
 	  success(function(data, status, headers, config) {
-		  //if(headers('Content-Type') == 'text/html;charset=UTF-8'){
-			//  $window.location.href = 'https://raoul-cas/QuickLaunch/secured/1/api/auth?url=http://raoul-g/secure.html';
-		  //} else {
+		  if(headers('Content-Type') != 'application/json;charset=UTF-8'){
+			  $window.location.href = 'https://raoul-cas/QuickLaunch/secured/1/api/auth?url=http%3A%2F%2Fraoul-g%2Fsecure.html';
+		  } else {
 			  $scope.msg = data;
-		  //}
+		  }
 	  }).
 	  error(function(data, status, headers, config) {
 		  //alert('error ' + status);

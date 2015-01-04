@@ -25,6 +25,15 @@ public class Book implements Serializable {
 	@Column(nullable = false)
 	private String author;
 
+	public Book() {
+	}
+
+	public Book(String title, Double price, String author) {
+		this.title = title;
+		this.price = price;
+		this.author = author;
+	}
+
 	public Long getId() {
 		return id;
 	}

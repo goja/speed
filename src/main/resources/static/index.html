@@ -2,7 +2,7 @@
 <html ng-app="speed">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Move fast</title>
+<title>Move faster</title>
 </head>
 <body>
 <table>
@@ -41,7 +41,7 @@ var app = angular.module('speed', ['ngRoute', 'speed.services']);
 app.config(['$routeProvider', 
     function ($routeProvider) {
 		$routeProvider.
-			when('/view', {
+			when('/view/:size/:page', {
 				controller: 'ListController',
 				templateUrl: 'view.html',
 			}).
@@ -54,13 +54,20 @@ app.config(['$routeProvider',
 				templateUrl: 'edit.html'
 			}).
 			otherwise({
-				redirectTo: '/view'
+				redirectTo: '/view/10/0'
 			});
 	}
 ]);
 
-app.controller('ListController', function ($scope, Book, $location){
-	$scope.books = Book.query();
+app.controller('ListController', function ($scope, $http, $location, $route){
+	//$scope.books = Book.query();
+	$http.get('/books/' + $route.current.params.size + '/' + $route.current.params.page).
+	  success(function(data, status, headers, config) {
+		  $scope.books = data;
+	  }).
+	  error(function(data, status, headers, config) {
+		  
+	  });
 	$scope.delete = function(book, index){
 		book.$remove();
 		$scope.books.splice(index, 1);
