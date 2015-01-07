@@ -5,12 +5,26 @@
 <title>Secured app</title>
 </head>
 <body ng-controller="secureController">
+<p>
+<button ng-click="logout()">Logout</button>
+</p>
 {{msg}}
 </body>
 <script type="text/javascript" src="js/angular.js"></script>
 <script type="text/javascript">
 var app = angular.module('secure', []);
 app.controller('secureController', function($scope, $http, $window){
+	$scope.logout = function(){
+		$http.get('https://raoul-cas/QuickLaunch/secured/1/api/logout', {withCredentials: true}).
+		  success(function(data, status, headers, config) {
+			  //alert(data);
+			$window.location.href = data;
+		  }).
+		  error(function(data, status, headers, config) {
+			  console.log('Error during logout');
+		  });
+	}
+	
 	$scope.msg = 'Not Authorized';
 	
 	$http.get('https://raoul-cas/QuickLaunch/secured/1/api/list/applications', {withCredentials: true}).
@@ -22,8 +36,7 @@ app.controller('secureController', function($scope, $http, $window){
 		  }
 	  }).
 	  error(function(data, status, headers, config) {
-		  //alert('error ' + status);
-		  //$window.location.href = 'https://raoul-cas/QuickLaunch/secured/1/api/auth?url=http://raoul-g/secure.html';
+		  $window.location.href = 'https://raoul-cas/QuickLaunch/secured/1/api/auth?url=http://raoul-g/secure.html';
 	  });
 });
 </script>

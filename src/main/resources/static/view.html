@@ -1,4 +1,11 @@
-<table>
+<table border="1" cellspacing="5" cellpadding="5">
+	<tr>
+		<th><a href="#/view/id/{{books.size}}/0">Id</a></th>
+		<th><a href="#/view/title/{{books.size}}/0">Title</a></th>
+		<th><a href="#/view/author/{{books.size}}/0">Author</a></th>
+		<th><a href="#/view/price/{{books.size}}/0">Price</a></th>
+		<th colspan="2"></th>
+	</tr>
   <tr ng-repeat="book in books.content">
     <td>{{book.id}}</td>
     <td>{{book.title}}</td>
@@ -11,21 +18,21 @@
 
 List results per page
 <span ng-show="books.size == 5">5</span>
-<span ng-hide="books.size == 5"><a href="#/view/5/0">5</a></span>
+<span ng-hide="books.size == 5"><a href="#/view/{{sort}}/5/0">5</a></span>
 <span ng-show="books.size == 10">10</span>
-<span ng-hide="books.size == 10"><a href="#/view/10/0">10</a></span>
+<span ng-hide="books.size == 10"><a href="#/view/{{sort}}/10/0">10</a></span>
 <span ng-show="books.size == 15">15</span>
-<span ng-hide="books.size == 15"><a href="#/view/15/0">15</a></span>
+<span ng-hide="books.size == 15"><a href="#/view/{{sort}}/15/0">15</a></span>
 <span ng-show="books.size == 20">20</span>
-<span ng-hide="books.size == 20"><a href="#/view/20/0">20</a></span>
+<span ng-hide="books.size == 20"><a href="#/view/{{sort}}/20/0">20</a></span>
 |
 <span ng-show="books.first">First</span>
-<span ng-hide="books.first"><a href="#/view/{{books.size}}/0">First</a></span>
+<span ng-hide="books.first"><a href="#/view/{{sort}}/{{books.size}}/0">First</a></span>
 <span ng-show="books.first">Previous</span>
-<span ng-hide="books.first"><a href="#/view/{{books.size}}/{{books.number - 1}}">Previous</a></span>
+<span ng-hide="books.first"><a href="#/view/{{sort}}/{{books.size}}/{{books.number - 1}}">Previous</a></span>
 Page {{books.number + 1}} of {{books.totalPages}}
 <span ng-show="books.last">Next</span>
-<span ng-hide="books.last"><a href="#/view/{{books.size}}/{{books.number + 1}}">Next</a></span>
+<span ng-hide="books.last"><a href="#/view/{{sort}}/{{books.size}}/{{books.number + 1}}">Next</a></span>
 <span ng-show="books.last">Last</span>
-<span ng-hide="books.last"><a href="#/view/{{books.size}}/{{books.totalPages - 1}}">Last</a></span>
+<span ng-hide="books.last"><a href="#/view/{{sort}}/{{books.size}}/{{books.totalPages - 1}}">Last</a></span>
 

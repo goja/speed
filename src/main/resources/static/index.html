@@ -41,7 +41,7 @@ var app = angular.module('speed', ['ngRoute', 'speed.services']);
 app.config(['$routeProvider', 
     function ($routeProvider) {
 		$routeProvider.
-			when('/view/:size/:page', {
+			when('/view/:sort/:size/:page', {
 				controller: 'ListController',
 				templateUrl: 'view.html',
 			}).
@@ -54,23 +54,30 @@ app.config(['$routeProvider',
 				templateUrl: 'edit.html'
 			}).
 			otherwise({
-				redirectTo: '/view/10/0'
+				redirectTo: '/view/id/10/0'
 			});
 	}
 ]);
 
-app.controller('ListController', function ($scope, $http, $location, $route){
+app.controller('ListController', function ($scope, $http, $location, $route, Book, $rootScope){
 	//$scope.books = Book.query();
-	$http.get('/books/' + $route.current.params.size + '/' + $route.current.params.page).
+	//$scope.$on('$locationChangeSuccess',function(evt, absNewUrl, absOldUrl) {
+	//		$scope.history = {'absNewUrl': absNewUrl, 'absOldUrl': absOldUrl};
+	//	});
+	$rootScope.history = {view: $location.url()};
+	$scope.sort = $route.current.params.sort;
+	$http.get('/books/' + $route.current.params.sort + '/' + $route.current.params.size + '/' + $route.current.params.page).
 	  success(function(data, status, headers, config) {
 		  $scope.books = data;
 	  }).
 	  error(function(data, status, headers, config) {
-		  
+		  console.log('Error retrieving books');
 	  });
 	$scope.delete = function(book, index){
-		book.$remove();
-		$scope.books.splice(index, 1);
+		//alert(JSON.stringify(book) + ' ' + index);
+		//book.$remove();
+		Book.remove(book);
+		$scope.books.content.splice(index, 1);
 	};
 	$scope.edit = function(book){
 		$location.path('/edit/' + book.id);
@@ -85,11 +92,11 @@ app.controller('AddController', function ($scope, Book){
 	};
 });
 
-app.controller('EditController', function ($scope, Book, $route, $location){
+app.controller('EditController', function ($scope, Book, $route, $location, $rootScope){
 	$scope.book = Book.get({id: $route.current.params.bookId});
 	$scope.update = function(){
 		$scope.book.$update();
-		$location.path('/view');
+		$location.path($rootScope.history.view);
 	};
 });
 

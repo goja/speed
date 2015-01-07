@@ -5,6 +5,9 @@ import org.goja.speed.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +21,10 @@ public class BookController {
 	@Autowired
 	private BookRepository bookRepository;
 
-	@RequestMapping(value = "/{size}/{page}", method = RequestMethod.GET)
-	Page<Book> list(@PathVariable Integer size, @PathVariable Integer page) {
-		return (Page<Book>) bookRepository.findAll(new PageRequest(page, size));
+	@RequestMapping(value = "/{sort}/{size}/{page}", method = RequestMethod.GET)
+	Page<Book> list(@PathVariable String sort, @PathVariable Integer size, @PathVariable Integer page) {
+		return (Page<Book>) bookRepository.findAll(new PageRequest(page, size, new Sort(new Order(Direction.ASC,
+				sort))));
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
